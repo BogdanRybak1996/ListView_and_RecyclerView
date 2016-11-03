@@ -27,6 +27,8 @@ dependencies {
         compile 'com.android.support:design:22.2.0'
         compile 'com.android.support:support-v4:20.+'
         compile 'com.wdullaer:swipeactionadapter:2.0.0'
+        compile 'com.google.code.gson:gson:2.7'
+        compile 'com.squareup.okhttp3:okhttp:3.3.0'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'

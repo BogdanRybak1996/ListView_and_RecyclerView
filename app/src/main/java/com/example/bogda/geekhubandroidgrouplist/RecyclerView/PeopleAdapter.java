@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import com.example.bogda.geekhubandroidgrouplist.People;
+import com.example.bogda.geekhubandroidgrouplist.Data.People;
 import com.example.bogda.geekhubandroidgrouplist.R;
 
 import java.util.ArrayList;
@@ -54,8 +54,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.MyHolder> 
         holder.gitHubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW,peoples.get(position).getGitHubLink());
-                context.startActivity(intent);
+                //TODO: on git button click
             }
         });
     }
