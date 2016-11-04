@@ -20,6 +20,7 @@
         <activity android:name=".listView.ListViewActivity" />
         <activity android:name=".recyclerView.RecyclerViewActivity" />
         <activity android:name=".userInfoActivity.GitHubUserInfoActivity" />
+        <activity android:name=".userInfoActivity.GooglePlusUserInfoActivity"></activity>
     </application>
 
 </manifest>

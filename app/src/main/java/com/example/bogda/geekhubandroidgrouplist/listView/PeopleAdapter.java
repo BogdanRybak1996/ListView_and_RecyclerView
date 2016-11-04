@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.bogda.geekhubandroidgrouplist.data.People;
 import com.example.bogda.geekhubandroidgrouplist.R;
 import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GitHubUserInfoActivity;
+import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GooglePlusUserInfoActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,7 +96,24 @@ public class PeopleAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: item click
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl url = HttpUrl.parse("https://www.googleapis.com/plus/v1/people/" + people.getGooglePlusId() + "?key=AIzaSyDk23y7ndIvFdIWyTCbntt50Y8ZH-DCgoo");
+                Request request = new Request.Builder().url(url).build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Toast.makeText(context,"Data get error",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String jsonResult = response.body().string();
+                        Intent intent = new Intent(context, GooglePlusUserInfoActivity.class);
+                        intent.putExtra("json",jsonResult);
+                        intent.putExtra("name",people.getName());
+                        context.startActivity(intent);
+                    }
+                });
             }
         });
         return view;
