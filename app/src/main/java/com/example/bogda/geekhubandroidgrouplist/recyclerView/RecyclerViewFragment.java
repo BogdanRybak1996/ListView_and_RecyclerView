@@ -3,6 +3,7 @@ package com.example.bogda.geekhubandroidgrouplist.recyclerView;
 
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -15,12 +16,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.bogda.geekhubandroidgrouplist.data.People;
 import com.example.bogda.geekhubandroidgrouplist.R;
+import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GooglePlusUserInfoActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by bogda on 29.10.2016.
@@ -102,6 +113,24 @@ public class RecyclerViewFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onClick(View view, int position) {
-        //TODO: onItemClick
+        final People people = peoples.get(position);
+        OkHttpClient client = new OkHttpClient();
+        HttpUrl url = HttpUrl.parse("https://www.googleapis.com/plus/v1/people/" + people.getGooglePlusId() + "?key=AIzaSyDk23y7ndIvFdIWyTCbntt50Y8ZH-DCgoo");
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(getActivity(),"Data get error",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String jsonResult = response.body().string();
+                Intent intent = new Intent(getActivity(), GooglePlusUserInfoActivity.class);
+                intent.putExtra("json",jsonResult);
+                intent.putExtra("name",people.getName());
+                getActivity().startActivity(intent);
+            }
+        });
     }
 }
