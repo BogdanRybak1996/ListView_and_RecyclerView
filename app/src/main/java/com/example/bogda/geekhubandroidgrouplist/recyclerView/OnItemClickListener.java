@@ -1,4 +1,4 @@
-package com.example.bogda.geekhubandroidgrouplist.RecyclerView;
+package com.example.bogda.geekhubandroidgrouplist.recyclerView;
 
 import android.view.View;
 

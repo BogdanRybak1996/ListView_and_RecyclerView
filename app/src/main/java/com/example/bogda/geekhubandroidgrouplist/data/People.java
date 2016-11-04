@@ -1,6 +1,4 @@
-package com.example.bogda.geekhubandroidgrouplist.Data;
-
-import android.net.Uri;
+package com.example.bogda.geekhubandroidgrouplist.data;
 
 /**
  * Created by bogda on 25.10.2016.

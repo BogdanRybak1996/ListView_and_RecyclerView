@@ -1,4 +1,4 @@
-package com.example.bogda.geekhubandroidgrouplist.Main;
+package com.example.bogda.geekhubandroidgrouplist.main;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.bogda.geekhubandroidgrouplist.ListView.ListViewActivity;
+import com.example.bogda.geekhubandroidgrouplist.listView.ListViewActivity;
 import com.example.bogda.geekhubandroidgrouplist.R;
-import com.example.bogda.geekhubandroidgrouplist.RecyclerView.RecyclerViewActivity;
+import com.example.bogda.geekhubandroidgrouplist.recyclerView.RecyclerViewActivity;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,39 +1,28 @@
-package com.example.bogda.geekhubandroidgrouplist.RecyclerView;
+package com.example.bogda.geekhubandroidgrouplist.listView;
 
 
-
-
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
-import com.example.bogda.geekhubandroidgrouplist.Data.People;
+import android.widget.ListView;
 import com.example.bogda.geekhubandroidgrouplist.R;
+import com.example.bogda.geekhubandroidgrouplist.data.People;
+import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
+import com.wdullaer.swipeactionadapter.SwipeDirection;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by bogda on 29.10.2016.
- */
-
-public class RecyclerViewFragment extends Fragment implements OnItemClickListener {
-   ArrayList<People> peoples = null;
+public class ListViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
 
-        peoples = new ArrayList<People>();
+        final ArrayList<People> peoples = new ArrayList<People>();
 
         peoples.add(new People("Евгений Жданов","113264746064942658029","zhdanov-ek"));
         peoples.add(new People("Edgar Khimich","102197104589432395674","lyfm"));
@@ -58,51 +47,48 @@ public class RecyclerViewFragment extends Fragment implements OnItemClickListene
 
         Collections.sort(peoples);
 
-        final PeopleAdapter adapter = new PeopleAdapter(getActivity(),peoples);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycle_data_list);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setClickable(true);
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        final ListView listView = (ListView) rootView.findViewById(R.id.data_list_view);
+        final PeopleAdapter adapter = new PeopleAdapter(getActivity(), peoples);
+        listView.setAdapter(adapter);
+        listView.setClickable(true);
+
+        final SwipeActionAdapter swipeAdapter = new SwipeActionAdapter(adapter);
+        swipeAdapter.setListView(listView);
+        listView.setAdapter(swipeAdapter);
+        swipeAdapter.setSwipeActionListener(new SwipeActionAdapter.SwipeActionListener() {
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean hasActions(int position, SwipeDirection direction) {
+                if(direction.isLeft()) return true;
+                if(direction.isRight()) return true;
                 return false;
             }
 
             @Override
-            public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int swipeDir) {
-                final int pos = viewHolder.getAdapterPosition();
-                final People people = peoples.get(pos);
-                adapter.notifyItemRemoved(pos);
-                adapter.notifyDataSetChanged();
-                peoples.remove(pos);
+            public boolean shouldDismiss(int position, SwipeDirection direction) {
+                return true;
+            }
+
+            @Override
+            public void onSwipe(int[] position, SwipeDirection[] direction) {
+                final int curPos = position[0];
+                final People people = peoples.get(curPos);
+                peoples.remove(curPos);
+                swipeAdapter.notifyDataSetChanged();
+
                 Snackbar.make(rootView,people.getName() + " deleted",Snackbar.LENGTH_LONG)
                         .setAction("Undo", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                peoples.add(pos,people);
-                                adapter.notifyItemRangeInserted(pos,1);
-                                adapter.notifyDataSetChanged();
+                                peoples.add(curPos,people);
+                                swipeAdapter.notifyDataSetChanged();
                             }
                         })
                         .setActionTextColor(Color.RED)
                         .show();
             }
-
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        });
 
         return rootView;
     }
 
-    @Override
-    public void onClick(View view, int position) {
-        //TODO: onItemClick
-    }
 }

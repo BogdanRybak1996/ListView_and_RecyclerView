@@ -1,4 +1,4 @@
-package com.example.bogda.geekhubandroidgrouplist.RecyclerView;
+package com.example.bogda.geekhubandroidgrouplist.recyclerView;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

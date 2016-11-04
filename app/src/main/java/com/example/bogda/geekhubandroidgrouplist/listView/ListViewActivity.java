@@ -1,4 +1,4 @@
-package com.example.bogda.geekhubandroidgrouplist.ListView;
+package com.example.bogda.geekhubandroidgrouplist.listView;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

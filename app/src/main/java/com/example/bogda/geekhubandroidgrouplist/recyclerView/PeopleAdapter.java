@@ -1,4 +1,4 @@
-package com.example.bogda.geekhubandroidgrouplist.RecyclerView;
+package com.example.bogda.geekhubandroidgrouplist.recyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import com.example.bogda.geekhubandroidgrouplist.Data.People;
-import com.example.bogda.geekhubandroidgrouplist.R;
+import android.widget.Toast;
 
+import com.example.bogda.geekhubandroidgrouplist.data.People;
+import com.example.bogda.geekhubandroidgrouplist.R;
+import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GitHubUserInfoActivity;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by bogda on 29.10.2016.
@@ -51,10 +62,30 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.MyHolder> 
     @Override
     public void onBindViewHolder(MyHolder holder, final int position) {
         holder.nameTextView.setText(peoples.get(position).getName());
+        final People people = peoples.get(position);
         holder.gitHubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: on git button click
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl url = HttpUrl.parse("https://api.github.com/users/" + people.getGitHubUserName());
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Toast.makeText(context, "Data get error", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String jsonResult = response.body().string();
+                        Intent intent = new Intent(context, GitHubUserInfoActivity.class);
+                        intent.putExtra("json",jsonResult);
+                        context.startActivity(intent);
+                    }
+                });
+
             }
         });
     }

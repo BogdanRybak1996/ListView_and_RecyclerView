@@ -1,4 +1,4 @@
-package com.example.bogda.geekhubandroidgrouplist.ListView;
+package com.example.bogda.geekhubandroidgrouplist.listView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,11 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bogda.geekhubandroidgrouplist.Data.GitHubUser;
-import com.example.bogda.geekhubandroidgrouplist.Data.People;
+import com.example.bogda.geekhubandroidgrouplist.data.People;
 import com.example.bogda.geekhubandroidgrouplist.R;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GitHubUserInfoActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +69,6 @@ public class PeopleAdapter extends BaseAdapter {
         gitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dont't working
                 OkHttpClient client = new OkHttpClient();
                 HttpUrl url = HttpUrl.parse("https://api.github.com/users/" + people.getGitHubUserName());
                 Request request = new Request.Builder()
@@ -80,15 +77,16 @@ public class PeopleAdapter extends BaseAdapter {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Toast.makeText(context, "Connection error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Data get error", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String jsonResult = response.body().string();
-                        Gson gson = new GsonBuilder().create();
-                        GitHubUser currUser = gson.fromJson(jsonResult,GitHubUser.class);
-                        //TODO: new Activity with currUser information
+                        Intent intent = new Intent(context, GitHubUserInfoActivity.class);
+                        intent.putExtra("json",jsonResult);
+                        intent.putExtra("name",people.getName());
+                        context.startActivity(intent);
                     }
                 });
 
