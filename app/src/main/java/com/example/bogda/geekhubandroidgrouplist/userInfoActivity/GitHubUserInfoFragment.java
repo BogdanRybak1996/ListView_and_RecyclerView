@@ -85,12 +85,11 @@ public class GitHubUserInfoFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://github.com/"+login));
+                    intent.setData(Uri.parse("https://github.com/" + login));
                     startActivity(intent);
                 }
             });
-        }
-        else {
+        } else {
             loginTextView.setVisibility(View.GONE);
         }
 
@@ -104,7 +103,7 @@ public class GitHubUserInfoFragment extends Fragment {
 
         //Location
         TextView locationTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_location);
-        if(user.getLocation()!=null){
+        if (user.getLocation() != null) {
             final String location = user.getLocation();
             locationTextView.setText(location);
             Paint p = new Paint();
@@ -114,18 +113,17 @@ public class GitHubUserInfoFragment extends Fragment {
             locationTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("geo:0,0?q="+location));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + location));
                     startActivity(intent);
                 }
             });
-        }
-        else{
+        } else {
             locationTextView.setVisibility(View.GONE);
             TextView locationLabelTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_location_label);
             locationLabelTextView.setVisibility(View.GONE);
         }
 
-         //Followers
+        //Followers
         TextView followersTextVeiew = (TextView) getActivity().findViewById(R.id.git_hub_user_info_followers);
         followersTextVeiew.setText(Integer.toString(user.getFollowers()));
 
@@ -135,10 +133,9 @@ public class GitHubUserInfoFragment extends Fragment {
 
         //Biography
         TextView biographyTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_biography);
-        if(user.getBio()!=null){
+        if (user.getBio() != null) {
             biographyTextView.setText(user.getBio());
-        }
-        else{
+        } else {
             TextView biographyLabelTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_biography_label);
             biographyLabelTextView.setVisibility(View.GONE);
             biographyTextView.setVisibility(View.GONE);

@@ -40,7 +40,7 @@ public class GitHubUser {
         return email;
     }
 
-    public String getBio(){
+    public String getBio() {
         return bio;
     }
 

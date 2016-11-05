@@ -93,23 +93,23 @@ public class GooglePlusUserInfoFragment extends Fragment {
         //Organizations
         TextView organizationsTextViewLabel = (TextView) getActivity().findViewById(R.id.google_plus_user_info_organizations_label);
         LinearLayout organizationsLayout = (LinearLayout) getActivity().findViewById(R.id.google_plus_organizations_layout);
-        organizationsLayout.setPadding(4,4,4,4);
         organizationsLayout.removeAllViews();
         if (user.getOrganizations() != null) {
             int counter = 1;
             for (Organization o : user.getOrganizations()) {
                 TextView textView = new TextView(getActivity());
-                textView.setText(Integer.toString(counter)+") " + o.getName());
+                textView.setTextSize(18);
+                textView.setText(Integer.toString(counter) + ") " + o.getName());
                 Paint p = new Paint();
                 p.setColor(Color.BLUE);
                 textView.setPaintFlags(p.getColor());
                 textView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-                final Organization
-                        tempOrganization = o;
+                counter++;
+                final Organization tempOrganization = o;
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("geo:0,0?q="+tempOrganization.getName()));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + tempOrganization.getName()));
                         startActivity(intent);
                     }
                 });
@@ -124,22 +124,23 @@ public class GooglePlusUserInfoFragment extends Fragment {
         //Places
         TextView placesTextViewLabel = (TextView) getActivity().findViewById(R.id.google_plus_user_info_places_label);
         LinearLayout placesLayout = (LinearLayout) getActivity().findViewById(R.id.google_plus_places_layout);
-        placesLayout.setPadding(4,4,4,4);
         placesLayout.removeAllViews();
         if (user.getPlacesLived() != null) {
             int counter = 1;
             for (Place o : user.getPlacesLived()) {
                 TextView textView = new TextView(getActivity());
-                textView.setText(Integer.toString(counter)+") " + o.getValue());
+                textView.setTextSize(18);
+                textView.setText(Integer.toString(counter) + ") " + o.getValue());
                 Paint p = new Paint();
                 p.setColor(Color.BLUE);
                 textView.setPaintFlags(p.getColor());
                 textView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                counter++;
                 final Place tempPlace = o;
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("geo:0,0?q="+tempPlace.getValue()));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + tempPlace.getValue()));
                         startActivity(intent);
                     }
                 });
@@ -149,6 +150,5 @@ public class GooglePlusUserInfoFragment extends Fragment {
             placesLayout.setVisibility(View.GONE);
             placesTextViewLabel.setVisibility(View.GONE);
         }
-
     }
 }

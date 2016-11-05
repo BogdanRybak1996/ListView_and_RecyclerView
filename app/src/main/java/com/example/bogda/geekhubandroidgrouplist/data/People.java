@@ -42,11 +42,9 @@ public class People implements Comparable {
     @Override
     public int compareTo(Object o) {
         People compPeople = (People) o;
-        if(compPeople.getName().compareTo(getName())>=0)
-        {
+        if (compPeople.getName().compareTo(getName()) >= 0) {
             return -1;
-        }
-        else{
+        } else {
             return 1;
         }
     }

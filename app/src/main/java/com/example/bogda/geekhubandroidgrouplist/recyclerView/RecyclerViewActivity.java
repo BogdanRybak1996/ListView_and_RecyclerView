@@ -12,7 +12,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container_recycle_view,new RecyclerViewFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container_recycle_view, new RecyclerViewFragment()).commit();
         }
         getSupportActionBar().setTitle("Group list");
     }

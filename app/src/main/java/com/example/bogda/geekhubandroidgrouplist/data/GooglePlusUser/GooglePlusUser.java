@@ -15,6 +15,7 @@ public class GooglePlusUser {
     private List<Organization> organizations;
     private List<Place> placesLived;
     private Cover cover;
+
     public String getBirthday() {
         return birthday;
     }

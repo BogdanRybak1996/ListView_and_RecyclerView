@@ -7,15 +7,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@android:color/holo_blue_light">
+        android:layout_height="200dp">
 
         <ImageView
             android:id="@+id/google_plus_user_info_image_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            tools:src="@drawable/background_test" />
+            android:src="@drawable/default_cover_photo_google_plus" />
 
         <ImageView
             android:id="@+id/google_plus_user_info_image_main"
@@ -47,14 +46,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 tools:text="Bohdan Rybak" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal">
 
@@ -62,13 +61,15 @@
                     android:id="@+id/google_plus_user_info_birthday_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Birthday:" />
+                    android:text="Birthday:"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/google_plus_user_info_birthday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
+                    android:textSize="18sp"
                     tools:text="02-11-1996" />
             </LinearLayout>
 
@@ -83,7 +84,8 @@
                     android:id="@+id/google_plus_user_info_gender_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gender:" />
+                    android:text="Gender:"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/google_plus_user_info_gender"
@@ -91,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_marginStart="2dp"
+                    android:textSize="18sp"
                     tools:text="male" />
             </LinearLayout>
 
@@ -101,12 +104,16 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:text="Organizations:"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/google_plus_organizations_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 android:orientation="vertical"></LinearLayout>
 
             <TextView
@@ -116,12 +123,16 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:text="Places lived:"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/google_plus_places_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 android:orientation="vertical"></LinearLayout>
         </LinearLayout>
     </ScrollView>

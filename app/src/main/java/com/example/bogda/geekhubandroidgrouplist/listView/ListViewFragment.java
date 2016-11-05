@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 import com.example.bogda.geekhubandroidgrouplist.R;
 import com.example.bogda.geekhubandroidgrouplist.data.People;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
@@ -24,26 +25,26 @@ public class ListViewFragment extends Fragment {
 
         final ArrayList<People> peoples = new ArrayList<People>();
 
-        peoples.add(new People("Евгений Жданов","113264746064942658029","zhdanov-ek"));
-        peoples.add(new People("Edgar Khimich","102197104589432395674","lyfm"));
-        peoples.add(new People("Alexander Storchak","106553086375805780685","new15"));
-        peoples.add(new People("Yevhenii Sytnyk","101427598085441575303","YevheniiSytnyk"));
-        peoples.add(new People("Alyona Prelestnaya","107382407687723634701","HelenCool"));
-        peoples.add(new People("Богдан Рибак","103145064185261665176","BogdanRybak1996"));
-        peoples.add(new People("Ірина Смалько","113994208318508685327","IraSmalko"));
-        peoples.add(new People("Владислав Винник","117765348335292685488","vlads0n"));
-        peoples.add(new People("Ігор Пахаренко","108231952557339738781","IhorPakharenko"));
-        peoples.add(new People("Андрей Рябко","110288437168771810002","RyabkoAndrew"));
-        peoples.add(new People("Ivan Leshchenko","111088051831122657934","ivleshch"));
-        peoples.add(new People("Микола Піхманець","110087894894730430086","NikPikhmanets"));
-        peoples.add(new People("Ruslan Migal","106331812587299981536","rmigal"));
-        peoples.add(new People("Руслан Воловик","109719711261293841416","RuslanVolovyk"));
-        peoples.add(new People("Valerii Gubskyi","107910188078571144657","gvv-ua"));
-        peoples.add(new People("Иван Сергеенко","111389859649705526831","dogfight81"));
-        peoples.add(new People("Вова Лымарь","109227554979939957830","VovanNec"));
-        peoples.add(new People("Даша Кириченко","103130382244571139113","dashakdsr"));
-        peoples.add(new People("Michael Tyoply","110313151428733681846","RedGeekPanda"));
-        peoples.add(new People("Павел Сакуров","108482088578879737406","sakurov"));
+        peoples.add(new People("Евгений Жданов", "113264746064942658029", "zhdanov-ek"));
+        peoples.add(new People("Edgar Khimich", "102197104589432395674", "lyfm"));
+        peoples.add(new People("Alexander Storchak", "106553086375805780685", "new15"));
+        peoples.add(new People("Yevhenii Sytnyk", "101427598085441575303", "YevheniiSytnyk"));
+        peoples.add(new People("Alyona Prelestnaya", "107382407687723634701", "HelenCool"));
+        peoples.add(new People("Богдан Рибак", "103145064185261665176", "BogdanRybak1996"));
+        peoples.add(new People("Ірина Смалько", "113994208318508685327", "IraSmalko"));
+        peoples.add(new People("Владислав Винник", "117765348335292685488", "vlads0n"));
+        peoples.add(new People("Ігор Пахаренко", "108231952557339738781", "IhorPakharenko"));
+        peoples.add(new People("Андрей Рябко", "110288437168771810002", "RyabkoAndrew"));
+        peoples.add(new People("Ivan Leshchenko", "111088051831122657934", "ivleshch"));
+        peoples.add(new People("Микола Піхманець", "110087894894730430086", "NikPikhmanets"));
+        peoples.add(new People("Ruslan Migal", "106331812587299981536", "rmigal"));
+        peoples.add(new People("Руслан Воловик", "109719711261293841416", "RuslanVolovyk"));
+        peoples.add(new People("Valerii Gubskyi", "107910188078571144657", "gvv-ua"));
+        peoples.add(new People("Иван Сергеенко", "111389859649705526831", "dogfight81"));
+        peoples.add(new People("Вова Лымарь", "109227554979939957830", "VovanNec"));
+        peoples.add(new People("Даша Кириченко", "103130382244571139113", "dashakdsr"));
+        peoples.add(new People("Michael Tyoply", "110313151428733681846", "RedGeekPanda"));
+        peoples.add(new People("Павел Сакуров", "108482088578879737406", "sakurov"));
 
         Collections.sort(peoples);
 
@@ -58,8 +59,8 @@ public class ListViewFragment extends Fragment {
         swipeAdapter.setSwipeActionListener(new SwipeActionAdapter.SwipeActionListener() {
             @Override
             public boolean hasActions(int position, SwipeDirection direction) {
-                if(direction.isLeft()) return true;
-                if(direction.isRight()) return true;
+                if (direction.isLeft()) return true;
+                if (direction.isRight()) return true;
                 return false;
             }
 
@@ -75,11 +76,11 @@ public class ListViewFragment extends Fragment {
                 peoples.remove(curPos);
                 swipeAdapter.notifyDataSetChanged();
 
-                Snackbar.make(rootView,people.getName() + " deleted",Snackbar.LENGTH_LONG)
+                Snackbar.make(rootView, people.getName() + " deleted", Snackbar.LENGTH_LONG)
                         .setAction("Undo", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                peoples.add(curPos,people);
+                                peoples.add(curPos, people);
                                 swipeAdapter.notifyDataSetChanged();
                             }
                         })

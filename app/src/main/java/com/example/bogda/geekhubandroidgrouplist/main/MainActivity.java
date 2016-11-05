@@ -22,14 +22,14 @@ public class MainActivity extends AppCompatActivity {
         listViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),ListViewActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ListViewActivity.class);
                 startActivity(intent);
             }
         });
         recycleViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),RecyclerViewActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RecyclerViewActivity.class);
                 startActivity(intent);
             }
         });

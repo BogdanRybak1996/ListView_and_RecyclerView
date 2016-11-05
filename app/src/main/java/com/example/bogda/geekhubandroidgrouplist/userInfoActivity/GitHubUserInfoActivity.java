@@ -12,7 +12,7 @@ public class GitHubUserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_git_hub_user_info);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.activity_git_hub_user_info,new GitHubUserInfoFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.activity_git_hub_user_info, new GitHubUserInfoFragment()).commit();
         }
         getSupportActionBar().setTitle("GitHub user info: " + getIntent().getStringExtra("name"));
     }

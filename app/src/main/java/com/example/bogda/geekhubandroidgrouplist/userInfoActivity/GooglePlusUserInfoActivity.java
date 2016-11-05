@@ -12,7 +12,7 @@ public class GooglePlusUserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_plus_user_info);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.activity_google_plus_user_info,new GooglePlusUserInfoFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.activity_google_plus_user_info, new GooglePlusUserInfoFragment()).commit();
         }
         getSupportActionBar().setTitle("Google+ user info: " + getIntent().getStringExtra("name"));
     }
