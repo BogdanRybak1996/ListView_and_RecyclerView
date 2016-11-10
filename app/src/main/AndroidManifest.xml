@@ -22,7 +22,10 @@
         <activity android:name=".listView.ListViewActivity" />
         <activity android:name=".recyclerView.RecyclerViewActivity" />
         <activity android:name=".userInfoActivity.GitHubUserInfoActivity" />
-        <activity android:name=".userInfoActivity.GooglePlusUserInfoActivity"></activity>
+        <activity android:name=".userInfoActivity.GooglePlusUserInfoActivity" />
+        <activity android:name=".photo.PhotoActivity"></activity>
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>
