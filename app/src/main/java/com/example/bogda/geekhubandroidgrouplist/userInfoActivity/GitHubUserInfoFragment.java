@@ -1,9 +1,12 @@
 package com.example.bogda.geekhubandroidgrouplist.userInfoActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +16,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bogda.geekhubandroidgrouplist.data.GitHubUser;
 import com.example.bogda.geekhubandroidgrouplist.R;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by bohdan on 04.11.16.
@@ -34,10 +50,34 @@ public class GitHubUserInfoFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        String json = getActivity().getIntent().getStringExtra("json");
-        Gson gson = new Gson();
-        GitHubUser user = gson.fromJson(json, GitHubUser.class);
 
+        //get api url
+        String[] urlParams = getActivity().getIntent().getData().toString().split("/");
+        String apiUrl = "https://api.github.com/users/"+urlParams[3];
+
+        //get user object
+        final String[] jsonResult = {""};
+        OkHttpClient client = new OkHttpClient();
+        HttpUrl url = HttpUrl.parse(apiUrl);
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(getContext(), "Data get error", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                jsonResult[0] = response.body().string();
+            }
+        });
+        GitHubUser user = null;
+        while (user == null) {
+            Gson gson = new Gson();
+            user = gson.fromJson(jsonResult[0], GitHubUser.class);
+        }
         //download image
         final ImageView photo = (ImageView) getActivity().findViewById(R.id.git_hub_user_info_photo);
         Picasso.with(getActivity()).load(user.getAvatar_url()).into(photo);

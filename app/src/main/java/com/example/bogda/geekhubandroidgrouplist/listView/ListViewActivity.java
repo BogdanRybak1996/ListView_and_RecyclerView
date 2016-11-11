@@ -10,8 +10,8 @@ import com.example.bogda.geekhubandroidgrouplist.Receivers.ChargeReceiver;
 import com.example.bogda.geekhubandroidgrouplist.Receivers.HeadPhoneReceiver;
 
 public class ListViewActivity extends AppCompatActivity {
-    HeadPhoneReceiver headphoneReceiver = new HeadPhoneReceiver();
-    ChargeReceiver chargeReceiver = new ChargeReceiver();
+    HeadPhoneReceiver headphoneReceiver;
+    ChargeReceiver chargeReceiver;
     IntentFilter headphonesFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
     IntentFilter chargeConnectedFilter = new IntentFilter(Intent.ACTION_POWER_CONNECTED);
     IntentFilter chargeDisconnectedFilter = new IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
@@ -30,6 +30,8 @@ public class ListViewActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        chargeReceiver = new ChargeReceiver();
+        headphoneReceiver = new HeadPhoneReceiver();
         registerReceiver(headphoneReceiver, headphonesFilter);
         registerReceiver(chargeReceiver, chargeConnectedFilter);
         registerReceiver(chargeReceiver, chargeDisconnectedFilter);
@@ -38,8 +40,13 @@ public class ListViewActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(headphoneReceiver);
-        unregisterReceiver(chargeReceiver);
+        try {
+            unregisterReceiver(headphoneReceiver);
+            unregisterReceiver(chargeReceiver);
+        }
+        catch (Exception e){
+            return;
+        }
     }
 
 }

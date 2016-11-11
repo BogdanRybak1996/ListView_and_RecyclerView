@@ -21,7 +21,15 @@
         </activity>
         <activity android:name=".listView.ListViewActivity" />
         <activity android:name=".recyclerView.RecyclerViewActivity" />
-        <activity android:name=".userInfoActivity.GitHubUserInfoActivity" />
+        <activity android:name=".userInfoActivity.GitHubUserInfoActivity" >
+            <intent-filter android:label="@string/app_name" android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="github.com" />
+            </intent-filter>
+        </activity>
         <activity android:name=".userInfoActivity.GooglePlusUserInfoActivity" />
         <activity android:name=".photo.PhotoActivity"></activity>
     </application>

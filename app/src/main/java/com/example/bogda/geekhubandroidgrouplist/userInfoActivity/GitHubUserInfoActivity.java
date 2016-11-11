@@ -11,8 +11,8 @@ import com.example.bogda.geekhubandroidgrouplist.Receivers.HeadPhoneReceiver;
 
 public class GitHubUserInfoActivity extends AppCompatActivity {
 
-    HeadPhoneReceiver headphoneReceiver = new HeadPhoneReceiver();
-    ChargeReceiver chargeReceiver = new ChargeReceiver();
+    HeadPhoneReceiver headphoneReceiver;
+    ChargeReceiver chargeReceiver;
     IntentFilter headphonesFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
     IntentFilter chargeConnectedFilter = new IntentFilter(Intent.ACTION_POWER_CONNECTED);
     IntentFilter chargeDisconnectedFilter = new IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
@@ -24,12 +24,19 @@ public class GitHubUserInfoActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.activity_git_hub_user_info, new GitHubUserInfoFragment()).commit();
         }
-        getSupportActionBar().setTitle("GitHub user info: " + getIntent().getStringExtra("name"));
+        if(getIntent().getStringExtra("name")!=null) {
+            getSupportActionBar().setTitle("GitHub user info: " + getIntent().getStringExtra("name"));
+        }
+        else{
+            getSupportActionBar().setTitle("GitHub user info");
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        headphoneReceiver = new HeadPhoneReceiver();
+        chargeReceiver = new ChargeReceiver();
         registerReceiver(headphoneReceiver, headphonesFilter);
         registerReceiver(chargeReceiver, chargeConnectedFilter);
         registerReceiver(chargeReceiver, chargeDisconnectedFilter);
@@ -38,8 +45,13 @@ public class GitHubUserInfoActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(headphoneReceiver);
-        unregisterReceiver(chargeReceiver);
+        try {
+            unregisterReceiver(headphoneReceiver);
+            unregisterReceiver(chargeReceiver);
+        }
+        catch (Exception e){
+            return;
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,30 +75,13 @@ public class PeopleAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if(isOnline(context)) {
-                    OkHttpClient client = new OkHttpClient();
-                    HttpUrl url = HttpUrl.parse("https://api.github.com/users/" + people.getGitHubUserName());
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .build();
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Toast.makeText(context, "Data get error", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            String jsonResult = response.body().string();
-                            Intent intent = new Intent(context, GitHubUserInfoActivity.class);
-                            intent.putExtra("json", jsonResult);
-                            intent.putExtra("name", people.getName());
-                            context.startActivity(intent);
-                        }
-                    });
+                    Intent intent = new Intent(context, GitHubUserInfoActivity.class);
+                    intent.setData(Uri.parse("https://github.com/users/" + people.getGitHubUserName()));
+                    intent.putExtra("name", people.getName());
+                    context.startActivity(intent);
                 }
-                else {
+                else{
                     Toast.makeText(context,"Check internet connection",Toast.LENGTH_SHORT).show();
-                    return;
                 }
             }
         });
