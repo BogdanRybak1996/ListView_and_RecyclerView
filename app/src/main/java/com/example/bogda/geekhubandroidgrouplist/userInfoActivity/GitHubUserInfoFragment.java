@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.bogda.geekhubandroidgrouplist.data.GitHubUser;
 import com.example.bogda.geekhubandroidgrouplist.R;
+import com.example.bogda.geekhubandroidgrouplist.data.GooglePlusUser.GooglePlusUser;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -74,9 +75,12 @@ public class GitHubUserInfoFragment extends Fragment {
             }
         });
         GitHubUser user = null;
-        while (user == null) {
-            Gson gson = new Gson();
-            user = gson.fromJson(jsonResult[0], GitHubUser.class);
+        Gson gson = new Gson();
+        while(true) {
+            if(!jsonResult[0].equals("")) {
+                user = gson.fromJson(jsonResult[0], GitHubUser.class);
+                break;
+            }
         }
         //download image
         final ImageView photo = (ImageView) getActivity().findViewById(R.id.git_hub_user_info_photo);

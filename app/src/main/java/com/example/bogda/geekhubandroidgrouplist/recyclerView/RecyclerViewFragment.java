@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.bogda.geekhubandroidgrouplist.data.People;
 import com.example.bogda.geekhubandroidgrouplist.R;
+import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GitHubUserInfoActivity;
 import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GooglePlusUserInfoActivity;
 
 import java.io.IOException;
@@ -116,25 +118,11 @@ public class RecyclerViewFragment extends Fragment implements OnItemClickListene
     @Override
     public void onClick(View view, int position) {
         final People people = peoples.get(position);
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl url = HttpUrl.parse("https://www.googleapis.com/plus/v1/people/" + people.getGooglePlusId() + "?key=AIzaSyDk23y7ndIvFdIWyTCbntt50Y8ZH-DCgoo");
-        Request request = new Request.Builder().url(url).build();
         if(isOnline(getActivity())) {
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Toast.makeText(getActivity(), "Data get error", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    String jsonResult = response.body().string();
-                    Intent intent = new Intent(getActivity(), GooglePlusUserInfoActivity.class);
-                    intent.putExtra("json", jsonResult);
-                    intent.putExtra("name", people.getName());
-                    getActivity().startActivity(intent);
-                }
-            });
+            Intent intent = new Intent(getContext(), GooglePlusUserInfoActivity.class);
+            intent.setData(Uri.parse("https://plus.google.com/" + people.getGooglePlusId()));
+            intent.putExtra("name", people.getName());
+            getContext().startActivity(intent);
         }
         else {
             Toast.makeText(getActivity(),"Check internet connection",Toast.LENGTH_SHORT).show();
@@ -146,8 +134,7 @@ public class RecyclerViewFragment extends Fragment implements OnItemClickListene
         if (ctx == null)
             return false;
 
-        ConnectivityManager cm =
-                (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;

@@ -13,13 +13,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bogda.geekhubandroidgrouplist.R;
+import com.example.bogda.geekhubandroidgrouplist.data.GitHubUser;
 import com.example.bogda.geekhubandroidgrouplist.data.GooglePlusUser.GooglePlusUser;
 import com.example.bogda.geekhubandroidgrouplist.data.GooglePlusUser.Organization;
 import com.example.bogda.geekhubandroidgrouplist.data.GooglePlusUser.Place;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by bohdan on 04.11.16.
@@ -36,10 +47,36 @@ public class GooglePlusUserInfoFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        String json = getActivity().getIntent().getStringExtra("json");
+        //get api url
+        String[] urlParams = getActivity().getIntent().getData().toString().split("/");
+        String apiUrl = "https://www.googleapis.com/plus/v1/people/" + urlParams[3] + "?key=AIzaSyDk23y7ndIvFdIWyTCbntt50Y8ZH-DCgoo";
+
+        //get user object
+        final String[] jsonResult = {""};
+        OkHttpClient client = new OkHttpClient();
+        HttpUrl url = HttpUrl.parse(apiUrl);
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(getContext(), "Data get error", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                jsonResult[0] = response.body().string();
+            }
+        });
+        GooglePlusUser user = null;
         Gson gson = new Gson();
-        GooglePlusUser user = gson.fromJson(json, GooglePlusUser.class);
-        user.getBirthday();
+        while(true) {
+            if(!jsonResult[0].equals("")) {
+                user = gson.fromJson(jsonResult[0], GooglePlusUser.class);
+                break;
+            }
+        }
 
         //Cover photo
         if (user.getCover() != null) {
@@ -50,8 +87,8 @@ public class GooglePlusUserInfoFragment extends Fragment {
         //Main photo
         if (user.getImage() != null) {
             ImageView mainImageView = (ImageView) getActivity().findViewById(R.id.google_plus_user_info_image_main);
-            String url = user.getImage().getUrl().replaceFirst("sz=50", "sz=200");
-            Picasso.with(getActivity()).load(url).into(mainImageView);
+            String photoUrl = user.getImage().getUrl().replaceFirst("sz=50", "sz=200");
+            Picasso.with(getActivity()).load(photoUrl).into(mainImageView);
         }
 
         //Name
@@ -60,12 +97,12 @@ public class GooglePlusUserInfoFragment extends Fragment {
 
         //Click on google+ logo
         ImageView googleLogoImageView = (ImageView) getActivity().findViewById(R.id.google_plus_logo_image);
-        final Uri url = Uri.parse(user.getUrl());
+        final Uri googlePlusUrl = Uri.parse(user.getUrl());
         googleLogoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(url);
+                intent.setData(googlePlusUrl);
                 startActivity(intent);
             }
         });
