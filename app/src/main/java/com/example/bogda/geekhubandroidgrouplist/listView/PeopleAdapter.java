@@ -76,7 +76,7 @@ public class PeopleAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if(isOnline(context)) {
                     Intent intent = new Intent(context, GitHubUserInfoActivity.class);
-                    intent.setData(Uri.parse("https://github.com/users/" + people.getGitHubUserName()));
+                    intent.setData(Uri.parse("https://github.com/" + people.getGitHubUserName()));
                     intent.putExtra("name", people.getName());
                     context.startActivity(intent);
                 }

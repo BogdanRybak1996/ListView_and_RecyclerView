@@ -9,6 +9,7 @@ import java.util.List;
 public class GooglePlusUser {
     private String birthday;
     private String gender;
+    private String objectType;
     private String displayName;
     private String url;
     private Image image;
@@ -46,5 +47,9 @@ public class GooglePlusUser {
 
     public Cover getCover() {
         return cover;
+    }
+
+    public String getObjectType() {
+        return objectType;
     }
 }

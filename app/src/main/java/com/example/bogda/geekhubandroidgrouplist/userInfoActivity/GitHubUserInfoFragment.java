@@ -41,6 +41,9 @@ import okhttp3.Response;
  */
 
 public class GitHubUserInfoFragment extends Fragment {
+
+    GitHubUser user = null;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,10 +57,8 @@ public class GitHubUserInfoFragment extends Fragment {
 
         //get api url
         String[] urlParams = getActivity().getIntent().getData().toString().split("/");
-        String apiUrl = "https://api.github.com/users/"+urlParams[3];
-
+        String apiUrl = "https://api.github.com/users/"+urlParams[urlParams.length-1];
         //get user object
-        final String[] jsonResult = {""};
         OkHttpClient client = new OkHttpClient();
         HttpUrl url = HttpUrl.parse(apiUrl);
         Request request = new Request.Builder()
@@ -71,118 +72,128 @@ public class GitHubUserInfoFragment extends Fragment {
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                jsonResult[0] = response.body().string();
+                String jsonResult = response.body().string();
+                Gson gson = new Gson();
+                user = gson.fromJson(jsonResult, GitHubUser.class);
+                getActivity().runOnUiThread(updateUIRunnable);
             }
         });
-        GitHubUser user = null;
-        Gson gson = new Gson();
-        while(true) {
-            if(!jsonResult[0].equals("")) {
-                user = gson.fromJson(jsonResult[0], GitHubUser.class);
-                break;
-            }
-        }
-        //download image
-        final ImageView photo = (ImageView) getActivity().findViewById(R.id.git_hub_user_info_photo);
-        Picasso.with(getActivity()).load(user.getAvatar_url()).into(photo);
-
-        //Show name
-        TextView nameTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_name);
-        if (user.getName() != null) {
-            nameTextView.setText(user.getName());
-        } else {
-            nameTextView.setVisibility(View.GONE);
-        }
-
-        //Show email
-        TextView emailTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_email);
-        if (user.getEmail() != null) {
-            emailTextView.setText(user.getEmail());
-            Paint p = new Paint();
-            p.setColor(Color.BLUE);
-            emailTextView.setPaintFlags(p.getColor());
-            emailTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-            final String email = user.getEmail();
-            emailTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.setType("text/html");
-                    intent.putExtra(Intent.EXTRA_EMAIL, email);
-                    startActivity(intent);
-                }
-            });
-        } else {
-            emailTextView.setVisibility(View.GONE);
-        }
-
-        //Show login
-        TextView loginTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_login);
-        if (user.getLogin() != null) {
-            loginTextView.setText(user.getLogin());
-            Paint p = new Paint();
-            p.setColor(Color.BLUE);
-            loginTextView.setPaintFlags(p.getColor());
-            loginTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-            final String login = user.getLogin();
-            loginTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://github.com/" + login));
-                    startActivity(intent);
-                }
-            });
-        } else {
-            loginTextView.setVisibility(View.GONE);
-        }
-
-        //Account type
-        TextView typeTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_type);
-        typeTextView.setText(user.getType());
-
-        //repos
-        TextView reposTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_repos);
-        reposTextView.setText(Integer.toString(user.getPublic_repos()));
-
-        //Location
-        TextView locationTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_location);
-        if (user.getLocation() != null) {
-            final String location = user.getLocation();
-            locationTextView.setText(location);
-            Paint p = new Paint();
-            p.setColor(Color.BLUE);
-            locationTextView.setPaintFlags(p.getColor());
-            locationTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-            locationTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + location));
-                    startActivity(intent);
-                }
-            });
-        } else {
-            locationTextView.setVisibility(View.GONE);
-            TextView locationLabelTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_location_label);
-            locationLabelTextView.setVisibility(View.GONE);
-        }
-
-        //Followers
-        TextView followersTextVeiew = (TextView) getActivity().findViewById(R.id.git_hub_user_info_followers);
-        followersTextVeiew.setText(Integer.toString(user.getFollowers()));
-
-        //Following
-        TextView followingTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_followoing);
-        followingTextView.setText(Integer.toString(user.getFollowing()));
-
-        //Biography
-        TextView biographyTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_biography);
-        if (user.getBio() != null) {
-            biographyTextView.setText(user.getBio());
-        } else {
-            TextView biographyLabelTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_biography_label);
-            biographyLabelTextView.setVisibility(View.GONE);
-            biographyTextView.setVisibility(View.GONE);
-        }
     }
+    private final Runnable updateUIRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            //Check user
+            if(user.getLogin() == null){
+                Toast.makeText(getActivity(),"This is not GitHub user link", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+                return;
+            }
+
+            //Show name
+            TextView nameTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_name);
+            if (user.getName() != null) {
+                nameTextView.setText(user.getName());
+            } else {
+                nameTextView.setVisibility(View.GONE);
+            }
+
+            //download image
+            final ImageView photo = (ImageView) getActivity().findViewById(R.id.git_hub_user_info_photo);
+            Picasso.with(getActivity()).load(user.getAvatar_url()).into(photo);
+
+
+            //Show email
+            TextView emailTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_email);
+            if (user.getEmail() != null) {
+                emailTextView.setText(user.getEmail());
+                Paint p = new Paint();
+                p.setColor(Color.BLUE);
+                emailTextView.setPaintFlags(p.getColor());
+                emailTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                final String email = user.getEmail();
+                emailTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/html");
+                        intent.putExtra(Intent.EXTRA_EMAIL, email);
+                        startActivity(intent);
+                    }
+                });
+            } else {
+                emailTextView.setVisibility(View.GONE);
+            }
+
+            //Show login
+            TextView loginTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_login);
+            if (user.getLogin() != null) {
+                loginTextView.setText(user.getLogin());
+                Paint p = new Paint();
+                p.setColor(Color.BLUE);
+                loginTextView.setPaintFlags(p.getColor());
+                loginTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                final String login = user.getLogin();
+                loginTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("https://github.com/" + login));
+                        startActivity(intent);
+                    }
+                });
+            } else {
+                loginTextView.setVisibility(View.GONE);
+            }
+
+            //Account type
+            TextView typeTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_type);
+            typeTextView.setText(user.getType());
+
+            //repos
+            TextView reposTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_repos);
+            reposTextView.setText(Integer.toString(user.getPublic_repos()));
+
+            //Location
+            TextView locationTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_location);
+            if (user.getLocation() != null) {
+                final String location = user.getLocation();
+                locationTextView.setText(location);
+                Paint p = new Paint();
+                p.setColor(Color.BLUE);
+                locationTextView.setPaintFlags(p.getColor());
+                locationTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                locationTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + location));
+                        startActivity(intent);
+                    }
+                });
+            } else {
+                locationTextView.setVisibility(View.GONE);
+                TextView locationLabelTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_location_label);
+                locationLabelTextView.setVisibility(View.GONE);
+            }
+
+            //Followers
+            TextView followersTextVeiew = (TextView) getActivity().findViewById(R.id.git_hub_user_info_followers);
+            followersTextVeiew.setText(Integer.toString(user.getFollowers()));
+
+            //Following
+            TextView followingTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_followoing);
+            followingTextView.setText(Integer.toString(user.getFollowing()));
+
+            //Biography
+            TextView biographyTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_biography);
+            if (user.getBio() != null) {
+                biographyTextView.setText(user.getBio());
+            } else {
+                TextView biographyLabelTextView = (TextView) getActivity().findViewById(R.id.git_hub_user_info_biography_label);
+                biographyLabelTextView.setVisibility(View.GONE);
+                biographyTextView.setVisibility(View.GONE);
+            }
+
+        }
+    };
 }
