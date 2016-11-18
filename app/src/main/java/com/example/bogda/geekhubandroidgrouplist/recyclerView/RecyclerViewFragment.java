@@ -36,6 +36,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.example.bogda.geekhubandroidgrouplist.service.OnlineChecker.isOnline;
+
 /**
  * Created by bogda on 29.10.2016.
  */
@@ -129,16 +131,5 @@ public class RecyclerViewFragment extends Fragment implements OnItemClickListene
             return;
         }
 
-    }
-    public static boolean isOnline(Context ctx) {
-        if (ctx == null)
-            return false;
-
-        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
     }
 }

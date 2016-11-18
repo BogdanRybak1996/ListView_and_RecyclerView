@@ -2,8 +2,6 @@ package com.example.bogda.geekhubandroidgrouplist.listView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +16,10 @@ import com.example.bogda.geekhubandroidgrouplist.R;
 import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GitHubUserInfoActivity;
 import com.example.bogda.geekhubandroidgrouplist.userInfoActivity.GooglePlusUserInfoActivity;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
+import static com.example.bogda.geekhubandroidgrouplist.service.OnlineChecker.isOnline;
 
 /**
  * Created by bogda on 29.10.2016.
@@ -88,25 +80,11 @@ public class PeopleAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OkHttpClient client = new OkHttpClient();
-                HttpUrl url = HttpUrl.parse("https://www.googleapis.com/plus/v1/people/" + people.getGooglePlusId() + "?key=AIzaSyDk23y7ndIvFdIWyTCbntt50Y8ZH-DCgoo");
-                Request request = new Request.Builder().url(url).build();
                 if(isOnline(context)) {
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Toast.makeText(context, "Data get error", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            String jsonResult = response.body().string();
-                            Intent intent = new Intent(context, GooglePlusUserInfoActivity.class);
-                            intent.putExtra("json", jsonResult);
-                            intent.putExtra("name", people.getName());
-                            context.startActivity(intent);
-                        }
-                    });
+                    Intent intent = new Intent(context, GooglePlusUserInfoActivity.class);
+                    intent.setData(Uri.parse("https://plus.google.com/" + people.getGooglePlusId()));
+                    intent.putExtra("name", people.getName());
+                    context.startActivity(intent);
                 }
                 else {
                     Toast.makeText(context,"Check internet connection",Toast.LENGTH_SHORT).show();
@@ -115,17 +93,5 @@ public class PeopleAdapter extends BaseAdapter {
             }
         });
         return view;
-    }
-    public static boolean isOnline(Context ctx) {
-        if (ctx == null)
-            return false;
-
-        ConnectivityManager cm =
-                (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
     }
 }

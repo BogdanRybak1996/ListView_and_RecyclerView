@@ -36,6 +36,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.example.bogda.geekhubandroidgrouplist.service.OnlineChecker.isOnline;
+
 /**
  * Created by bohdan on 04.11.16.
  */
@@ -57,27 +59,35 @@ public class GitHubUserInfoFragment extends Fragment {
 
         //get api url
         String[] urlParams = getActivity().getIntent().getData().toString().split("/");
-        String apiUrl = "https://api.github.com/users/"+urlParams[urlParams.length-1];
+        String apiUrl = "https://api.github.com/users/" + urlParams[urlParams.length - 1];
         //get user object
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl url = HttpUrl.parse(apiUrl);
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+        if (isOnline(getContext())) {
+            OkHttpClient client = new OkHttpClient();
+            HttpUrl url = HttpUrl.parse(apiUrl);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Toast.makeText(getContext(), "Data get error", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String jsonResult = response.body().string();
-                Gson gson = new Gson();
-                user = gson.fromJson(jsonResult, GitHubUser.class);
-                getActivity().runOnUiThread(updateUIRunnable);
-            }
-        });
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Toast.makeText(getContext(), "Data get error", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String jsonResult = response.body().string();
+                    Gson gson = new Gson();
+                    user = gson.fromJson(jsonResult, GitHubUser.class);
+                    getActivity().runOnUiThread(updateUIRunnable);
+                }
+            });
+        }
+        else{
+            Toast.makeText(getContext(),"Check the internet connection",Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+            return;
+        }
     }
     private final Runnable updateUIRunnable = new Runnable() {
         @Override
